@@ -6,13 +6,13 @@ These hour names are applied to UTC time so they're the same all over the world,
 
 This repo is a simple website that draws a 24-hour clock showing your local time, the seasonal hour name, and the UTC hour.
 
-![](screenshot.png)
+![](screenshot.jpg)
 
 Local noon is at the top and local midnight at the bottom.
 
 The 4 seasons each have their own color, and the "year" starts at UTC 00.  Winter is blue, spring is green, etc.
 
-The faint innter text is the hour in UTC.  In this screenshot it's 1:30pm local time, UTC 21, the Hour Of Thunder.
+The faint innter text is the hour in UTC.  In this screenshot it's 1:45pm local time, UTC 21, the Hour Of Thunder.
 
 The colored pie chart in the middle shows daylight, dusk, and night.  The hour hand also represents the sun.
 
