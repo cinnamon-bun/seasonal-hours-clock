@@ -1,8 +1,8 @@
 import * as React from "react";
 import "./styles.css";
 
+import { config } from './config';
 import {
-    config,
     range,
 } from './util';
 import {

@@ -1,6 +1,6 @@
 import * as React from "react";
+import { config } from './config';
 import { Season } from "./seasonal-hours";
-import { config } from "./util";
 
 //================================================================================
 // COLORS
