@@ -26,6 +26,8 @@ import {
 // MAIN
 
 let hourToString = (n: number): string => {
+    if (n === 12) { return 'Noon'; }
+    if (n === 0) { return 'Midnight'; }
     if (config.useAmPm) {
         let isAm = (n <= 11);
         let ampm = isAm ? 'a' : 'p';
