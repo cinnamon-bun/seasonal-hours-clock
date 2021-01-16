@@ -2,6 +2,8 @@
 //================================================================================
 // HELPERS
 
+// a function that does nothing
+// this helps satisfy the linter that a variable is being used
 export let nop = (x: any): void => {}
 
 // given a date, return the fraction of the way it is through the day
