@@ -12,6 +12,19 @@ export let cInkFaint = 'rgb(91, 68, 38)';
 //================================================================================
 // STYLES
 
+export let sDay: React.CSSProperties = {
+    stroke: 'none',
+    fill: 'rgb(113, 92, 43)',
+};
+export let sDusk: React.CSSProperties = {
+    stroke: 'none',
+    fill: 'rgb(39, 38, 53)',
+};
+export let sNight: React.CSSProperties = {
+    stroke: 'none',
+    fill: 'rgb(19, 17, 30)',
+};
+
 export let sNone: React.CSSProperties = {
     stroke: 'none',
     fill: 'none',

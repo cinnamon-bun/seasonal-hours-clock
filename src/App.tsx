@@ -1,26 +1,80 @@
 import * as React from "react";
 import "./styles.css";
 
+import SunCalc from 'suncalc';
+
 import { config } from './config';
+import { dayPct, nop, range } from './util';
 import {
-    range,
-} from './util';
-import {
-    Rec, Rotate,
+    Pie,
+    Rec,
+    Rotate,
 } from './svg-utils';
 import { Dial } from './dial';
 import {
     cInk,
     cInkFaint,
+    sDay,
+    sDusk,
     sFillDebug,
+    sFillInk,
     sFillSeasonLookup,
     sLineDebug,
     sLineInk,
+    sNight,
     sNone,
 } from './styles';
-import {
-    hourTable
-} from './seasonal-hours';
+import { hourTable } from './seasonal-hours';
+
+//================================================================================
+// LOCATION
+
+interface Location {
+    lat: number,
+    lon: number,
+}
+
+let saveLocation = (loc: Location) => {
+    localStorage.setItem('seasonal-hours-location', JSON.stringify(loc));
+}
+let loadLocation = (): Location | null => {
+    let val = localStorage.getItem('seasonal-hours-location');
+    if (val === undefined) { return null; }
+    return JSON.parse(val as any) as Location;
+}
+
+let requestLocation = async (): Promise<Location | null> => {
+    let prom = new Promise<Location | null>((res, rej) => {
+        navigator.geolocation.getCurrentPosition((result) => {
+            let loc : Location = { lat: result.coords.latitude, lon: result.coords.longitude };
+            res(loc);
+        }, (err) => {
+            console.warn(err);
+            res(null);
+        });
+    });
+    return prom;
+}
+
+let getLocation = async (): Promise<Location | null> => {
+    // first try to load from localstorage
+    let loc = loadLocation();
+    if (loc !== null) {
+        console.log('--- location: loaded from localstorage');
+        return loc;
+    } else {
+        // otherwise request from user
+        console.log('--- location: requesting');
+        let loc = await requestLocation();
+        if (loc !== null) {
+            console.log('--- location: saving');
+            saveLocation(loc);
+        } else {
+            console.log('--- location: failed');
+        }
+        return loc;
+    }
+}
 
 //================================================================================
 // MAIN
@@ -39,18 +93,45 @@ let hourToString = (n: number): string => {
     }
 }
 
+let computeSunTimes = (loc: Location | null) => {
+    console.log('=== calculating sun times for location ', loc);
+    if (loc === null) { return null; }
+    return SunCalc.getTimes(new Date(), loc.lat, loc.lon);
+}
+
+let useTimer = (ms: number): number => {
+    // redraw every so often
+    let [tick, setTick] = React.useState(0);
+    React.useEffect(() => {
+        let redrawInterval = setInterval(() => {
+            setTick(t => t + 1);
+        }, ms);
+        return () => { clearInterval(redrawInterval); };
+    }, [ms]);
+    return tick;
+}
+
 export default function App() {
 
-    // redraw every so often
-    let [, setTick] = React.useState(0);
+    let redrawTick = useTimer(config.redrawEveryNSeconds * 1000);
+    let recalcSunTick = useTimer(1000 * 60 * 60 * 6);  // recalc sun every 6 hours
+
+    nop(redrawTick);
+
+    // get location from browser once at startup
+    let [loc, setLoc] = React.useState<Location | null>(null);
     React.useEffect(() => {
-        console.log('setting up interval');
-        let interval = setInterval(() => {
-            console.log('interval');
-            setTick(t => t + 1);
-        }, config.redrawEveryNSeconds * 1000);
-        return () => { clearInterval(interval); };
+        console.log('> calling getLocation');
+        getLocation().then(loc => setLoc(loc));
     }, []);
+    console.log('        render: location = ', loc);
+
+    // recalculate sun times
+    let sunTimes = React.useMemo(() => {
+        nop(recalcSunTick);
+        return computeSunTimes(loc);
+    }, [loc, recalcSunTick]);
+    console.log('        render: sunTimes = ', sunTimes);
 
     let res = config.res;
     let cx = res/2;
@@ -59,16 +140,52 @@ export default function App() {
     let now = new Date();
     let hoursOffset = now.getTimezoneOffset() / 60;
     // range: 0-1 (midnight to midnight)
-    let nowDayPct = now.getHours() / 24 + now.getMinutes() / 24 / 60;
+    let nowDayPct = dayPct(now);
     return <div className="App">
         <svg
             width={config.res}
             height={config.res}
             style={sFillDebug}
             >
+            {/* debug borders */}
             <Rec cx={cx} cy={cy} rx={res/2 - 1} style={sLineDebug} />
             <circle cx={cx} cy={cy} r={5} style={sLineDebug} />
             <circle cx={cx} cy={cy} r={res/2} style={sLineDebug} />
+
+            {/* daylight */}
+            {(sunTimes !== null && config.showSunTimes) ?
+                <Pie
+                    cx={cx} cy={cy}
+                    angle1={dayPct(sunTimes.sunrise) * 360 + 180}
+                    angle2={dayPct(sunTimes.sunset) * 360 + 180}
+                    rMin={radMax * 0} rMax={radMax * 0.7}
+                    style={sDay}
+                    />
+            : undefined }
+            {/* sun */}
+            <Rotate cx={cx} cy={cy} angle={nowDayPct * 360}>
+                <circle cx={cx} cy={cy + radMax*0.5} r={radMax*0.035} style={sFillInk} />
+            </Rotate>
+            {/* dusk */}
+            {(sunTimes !== null && config.showSunTimes) ?
+                <Pie
+                    cx={cx} cy={cy}
+                    angle1={dayPct(sunTimes.sunset) * 360 - 180}
+                    angle2={dayPct(sunTimes.sunrise) * 360 + 180}
+                    rMin={radMax * 0} rMax={radMax * 0.7}
+                    style={sDusk}
+                    />
+            : undefined }
+            {/* night */}
+            {(sunTimes !== null && config.showSunTimes) ?
+                <Pie
+                    cx={cx} cy={cy}
+                    angle1={dayPct(sunTimes.nauticalDusk) * 360 - 180}
+                    angle2={dayPct(sunTimes.nauticalDawn) * 360 + 180}
+                    rMin={radMax * 0} rMax={radMax * 0.7}
+                    style={sNight}
+                    />
+            : undefined }
             <Rotate cx={cx} cy={cy}
                 angle={(12 - hoursOffset) * 360/24}
                 >
