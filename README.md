@@ -1,5 +1,7 @@
 # Seasonal Hours Clock
 
+[See it live](https://seasonal-hours-clock.netlify.app/)
+
 It would be nice if the 24 hours of UTC time each had a short memorable name.  It would make it easier to plan chats with distant friends, since the hour-names would be synchronized around the world.
 
 Let's choose a theme like... seasons of the year, just to be confusing. :)  Squish a year into 24 hours starting with the winter solstice at UTC 00, which we'll call **The Candle Hour**.
