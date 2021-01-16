@@ -1,8 +1,8 @@
 # Seasonal Hours Clock
 
-Imagine mapping the 24 hours of the day to the seasons of the year.  Give each hour a short meaningful name.  For example, midnight is like Jan 1, in the depths of winter, so it's called the **Candle Hour**.
+It would be nice if the 24 hours of UTC time each had a short memorable name.  It would make it easier to plan chats with distant friends, since the hour-names would be synchronized around the world.
 
-These hour names are applied to UTC time so they're the same all over the world, and can be used to more easily plan meetups with remote people.
+Let's choose a theme like... seasons of the year, just to be confusing. :)  UTC 00 is the beginning of winter, UTC 12 is the beginning of summer.  The name of UTC 00 is **The Candle Hour** because it feels wintery.
 
 This repo is a simple website that draws a 24-hour clock showing your local time, the seasonal hour name, and the UTC hour.
 
