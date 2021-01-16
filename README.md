@@ -19,3 +19,5 @@ The faint innter text is the hour in UTC.  The yellow line is the hour hand.  In
 This concept originated in [Twodays Crossing](https://github.com/earthstar-project/twodays-crossing), an Earthstar chat app.
 
 [View in CodeSandbox](https://codesandbox.io/s/old-hooks-2cxi6?file=/README.md)
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/9082d826-4108-4eb0-b2d3-d2e6d6066a9d/deploy-status)](https://app.netlify.com/sites/seasonal-hours-clock/deploys)
