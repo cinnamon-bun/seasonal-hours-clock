@@ -76,6 +76,12 @@ let getLocation = async (): Promise<Location | null> => {
     }
 }
 
+let computeSunTimes = (loc: Location | null) => {
+    console.log('=== calculating sun times for location ', loc);
+    if (loc === null) { return null; }
+    return SunCalc.getTimes(new Date(), loc.lat, loc.lon);
+}
+
 //================================================================================
 // MAIN
 
@@ -91,12 +97,6 @@ let hourToString = (n: number): string => {
     } else {
         return (''+n).padStart(2, '0');
     }
-}
-
-let computeSunTimes = (loc: Location | null) => {
-    console.log('=== calculating sun times for location ', loc);
-    if (loc === null) { return null; }
-    return SunCalc.getTimes(new Date(), loc.lat, loc.lon);
 }
 
 let useTimer = (ms: number): number => {
@@ -121,8 +121,10 @@ export default function App() {
     // get location from browser once at startup
     let [loc, setLoc] = React.useState<Location | null>(null);
     React.useEffect(() => {
-        console.log('> calling getLocation');
-        getLocation().then(loc => setLoc(loc));
+        if (config.showSunTimes) {
+            console.log('> calling getLocation');
+            getLocation().then(loc => setLoc(loc));
+        }
     }, []);
     console.log('        render: location = ', loc);
 

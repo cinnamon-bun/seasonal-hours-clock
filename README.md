@@ -10,9 +10,11 @@ This repo is a simple website that draws a 24-hour clock showing your local time
 
 Local noon is at the top and local midnight at the bottom.
 
-The 4 seasons each have their own color.  Winter is blue, spring is green, etc.
+The 4 seasons each have their own color, and the "year" starts at UTC 00.  Winter is blue, spring is green, etc.
 
-The faint innter text is the hour in UTC.  The yellow line is the hour hand.  In this screenshot it's 8:10pm local time, UTC 04, the Hour Of The Root.
+The faint innter text is the hour in UTC.  In this screenshot it's 1:30pm local time, UTC 21, the Hour Of Thunder.
+
+The colored pie chart in the middle shows daylight, dusk, and night.  The hour hand also represents the sun.
 
 [seasonal-hours.ts](https://github.com/cinnamon-bun/seasonal-hours-clock/blob/main/src/seasonal-hours.ts) has a complete listing of hour names.
 
