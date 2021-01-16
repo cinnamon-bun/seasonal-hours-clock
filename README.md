@@ -17,3 +17,5 @@ The faint innter text is the hour in UTC.  The yellow line is the hour hand.  In
 [seasonal-hours.ts](https://github.com/cinnamon-bun/seasonal-hours-clock/blob/main/src/seasonal-hours.ts) has a complete listing of hour names.
 
 This concept originated in [Twodays Crossing](https://github.com/earthstar-project/twodays-crossing), an Earthstar chat app.
+
+[View in CodeSandbox](https://codesandbox.io/s/old-hooks-2cxi6?file=/README.md)
