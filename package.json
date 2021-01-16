@@ -5,7 +5,6 @@
   "keywords": [],
   "main": "src/index.tsx",
   "dependencies": {
-    "@types/suncalc": "1.8.0",
     "react": "17.0.0",
     "react-dom": "17.0.0",
     "react-scripts": "3.3.0",
@@ -14,6 +13,7 @@
   "devDependencies": {
     "@types/react": "16.9.19",
     "@types/react-dom": "16.9.5",
+    "@types/suncalc": "1.8.0",
     "typescript": "3.7.5"
   },
   "scripts": {
