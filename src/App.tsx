@@ -84,13 +84,36 @@ let computeSunTimes = (loc: Location | null) => {
     return SunCalc.getTimes(new Date(), loc.lat, loc.lon);
 }
 
+let loadSettings = () => {
+    let use24str = localStorage.getItem('use24Hour');
+    let use24 = false;
+    if (use24str === 'true') {
+        use24 = true;
+        console.log("use24 was true in localstorage\n");
+    }
+    
+    return {use24};
+}
+
+let setSettings= (settings: { use24: boolean; }) => {
+    console.log("setsettings was called\n");
+    console.log("use24 is"+settings.use24);
+    if (settings.use24 === true) {
+        localStorage.setItem('use24Hour', 'true');
+        console.log("setting use24 to true in localstorage\n");
+    } else {
+        localStorage.setItem('use24Hour', 'false');
+        console.log("setting use24 to false in localstorage\n");
+    }
+}
+
 //================================================================================
 // MAIN
 
-let hourToString = (n: number): string => {
+let hourToString = (n: number, useAmPm: boolean): string => {
     if (n === 12) { return 'Noon'; }
     if (n === 0) { return 'Midnight'; }
-    if (config.useAmPm) {
+    if (useAmPm) {
         let isAm = (n <= 11);
         let ampm = isAm ? 'a' : 'p';
         let n2 = n % 12;
@@ -102,6 +125,7 @@ let hourToString = (n: number): string => {
 }
 
 export default function App() {
+    const [settings, newSettings] = React.useState(loadSettings);
     let redrawTick = useTimer(config.redrawEveryNSeconds * 1000);
     let recalcSunTick = useTimer(1000 * 60 * 60 * 6);  // recalc sun every 6 hours
 
@@ -138,7 +162,16 @@ export default function App() {
             </a>
             <details>
                 <summary>Settings</summary>
-                Settings will go here one day
+                <input type="checkbox" id="use24HourTime" onChange={() => 
+                    {
+                        let newVal = !settings.use24;
+                        newSettings({use24:newVal});
+                        let tempSettings = settings;
+                        tempSettings.use24 = newVal;
+                        setSettings(tempSettings);
+                    }
+                    } checked={settings.use24}></input>
+                Use 24-hour time format
             </details>
         </div>
         <svg
@@ -243,7 +276,7 @@ export default function App() {
                 textScale={0.62}
                 ticks={range(24).map(n => ({
                     angle: 360 * n / 24,
-                    text: hourToString((n + 12) % 24),
+                    text: hourToString((n + 12) % 24, !settings.use24),
                     bgStyle: sNone,
                     cText: cInk,
                 }))}
