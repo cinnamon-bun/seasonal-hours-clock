@@ -15,7 +15,8 @@ import {
     cInk,
     cInkFaint,
     sDay,
-    sDusk,
+    sNauticalDusk,
+    sCivilDusk,
     sFillDebug,
     sFillInk,
     sFillSeasonLookup,
@@ -158,18 +159,29 @@ export default function App() {
                 <circle cx={cx} cy={cy + radMax*0.5} r={radMax*0.035} style={sFillInk} />
             </Rotate>
 
-            {/* dusk */}
+            {/* sunset to civil dusk */}
             {(sunTimes !== null && config.showSunTimes) ?
                 <Pie
                     cx={cx} cy={cy}
                     angle1={dayPct(sunTimes.sunset) * 360 - 180}
                     angle2={dayPct(sunTimes.sunrise) * 360 + 180}
                     rMin={radMax * 0} rMax={radMax * 0.7}
-                    style={sDusk}
+                    style={sCivilDusk}
                     />
             : undefined }
 
-            {/* night */}
+            {/* civil dusk to nautical dusk */}
+            {(sunTimes !== null && config.showSunTimes) ?
+                <Pie
+                    cx={cx} cy={cy}
+                    angle1={dayPct(sunTimes.dusk) * 360 - 180}
+                    angle2={dayPct(sunTimes.dawn) * 360 + 180}
+                    rMin={radMax * 0} rMax={radMax * 0.7}
+                    style={sNauticalDusk}
+                    />
+            : undefined }
+
+            {/* nautical dusk through night */}
             {(sunTimes !== null && config.showSunTimes) ?
                 <Pie
                     cx={cx} cy={cy}
