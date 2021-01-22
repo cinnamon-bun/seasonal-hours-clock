@@ -8,7 +8,7 @@ Let's choose a theme like... seasons of the year, just to be confusing. :)  Squi
 
 This repo is a simple website that draws a 24-hour clock showing your local time, the seasonal hour name, and the UTC hour.
 
-![](screenshot.jpg)
+![](Selection_009.jpg)
 
 Outer numbers: local time, with noon at top and midnight at bottom.
 
