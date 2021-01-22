@@ -132,6 +132,12 @@ export default function App() {
     let hoursOffset = now.getTimezoneOffset() / 60;
     let nowDayPct = dayPct(now);  // range: 0-1 (midnight to midnight)
     return <div className="App">
+        <div className="settings">
+            <details>
+                <summary>Settings</summary>
+                Settings will go here one day
+            </details>
+        </div>
         <svg
             width={config.res}
             height={config.res}
