@@ -133,6 +133,9 @@ export default function App() {
     let nowDayPct = dayPct(now);  // range: 0-1 (midnight to midnight)
     return <div className="App">
         <div className="settings">
+            <a href="https://github.com/cinnamon-bun/seasonal-hours-clock/tree/main/">
+                source code
+            </a>
             <details>
                 <summary>Settings</summary>
                 Settings will go here one day
