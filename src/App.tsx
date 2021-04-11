@@ -192,9 +192,11 @@ export default function App() {
                     textScale={0.39}
                     ticks={range(24).map(n => {
                         let hourOf = hourTable[n];
+                        // title case
+                        let shortNameTitle = hourOf.shortName[0].toUpperCase() + hourOf.shortName.slice(1);
                         return {
                             angle: 360 * n / 24,
-                            text: hourOf.shortName,
+                            text: shortNameTitle,
                             bgStyle: sFillSeasonLookup[hourOf.season],
                             cText: cInk,
                         };
