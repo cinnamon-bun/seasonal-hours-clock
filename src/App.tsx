@@ -41,8 +41,8 @@ let saveLocToStorage = (loc: Location) => {
 }
 let loadLocFromStorage = (): Location | null => {
     let val = localStorage.getItem('seasonal-hours-location');
-    if (val === undefined) { return null; }
-    return JSON.parse(val as any) as Location;
+    if (val === undefined || val === null) { return null; }
+    return JSON.parse(val);
 }
 
 let requestLocFromBrowser = async (): Promise<Location | null> => {
