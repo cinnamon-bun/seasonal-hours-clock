@@ -26,8 +26,7 @@ interface DialProps {
 }
 export let Dial = (props: DialProps) => {
     let { cx, cy, radMin, radMax, ticks, textScale, textAlign } = props;
-    let textScale2 = 0.6;
-    if (textScale !== undefined) { textScale2 = textScale; }
+    if (textScale === undefined) { textScale = 0.6; }
 
     let tickAngleWidth = 360 / ticks.length;
     let textRotExtra =
@@ -50,7 +49,7 @@ export let Dial = (props: DialProps) => {
                     <text x={cx} y={cy - (radMin + radMax)/2}
                         textAnchor={textAlign === 'left' ? 'left' : 'middle'}
                         dominantBaseline="mathematical"
-                        fontSize={(radMax - radMin) * textScale2}
+                        fontSize={(radMax - radMin) * (textScale as number)}
                         style={{
                             stroke: 'none',
                             fill: tick.cText || cInk,
