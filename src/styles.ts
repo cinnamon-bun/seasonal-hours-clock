@@ -16,7 +16,11 @@ export let sDay: React.CSSProperties = {
     stroke: 'none',
     fill: 'rgb(113, 92, 43)',
 };
-export let sDusk: React.CSSProperties = {
+export let sCivilDusk: React.CSSProperties = {
+    stroke: 'none',
+    fill: 'rgb(99, 38, 53)',
+};
+export let sNauticalDusk: React.CSSProperties = {
     stroke: 'none',
     fill: 'rgb(39, 38, 53)',
 };

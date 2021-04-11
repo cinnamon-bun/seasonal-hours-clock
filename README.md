@@ -1,24 +1,30 @@
 # Seasonal Hours Clock
 
-Imagine mapping the 24 hours of the day to the seasons of the year.  Give each hour a short meaningful name.  For example, midnight is like Jan 1, in the depths of winter, so it's called the **Candle Hour**.
+[See it live](https://seasonal-hours-clock.netlify.app/)
 
-These hour names are applied to UTC time so they're the same all over the world, and can be used to more easily plan meetups with remote people.
+It would be nice if the 24 hours of UTC time each had a short memorable name.  It would make it easier to plan chats with distant friends, since the hour-names would be synchronized around the world.
+
+Let's choose a theme like... seasons of the year, just to be confusing. :)  Squish a year into 24 hours starting with the winter solstice at UTC 00, which we'll call **The Candle Hour**.
 
 This repo is a simple website that draws a 24-hour clock showing your local time, the seasonal hour name, and the UTC hour.
 
-![](screenshot.jpg)
+![](Selection_009.png)
 
-Local noon is at the top and local midnight at the bottom.
+Outer numbers: local time, with noon at top and midnight at bottom.
 
-The 4 seasons each have their own color, and the "year" starts at UTC 00.  Winter is blue, spring is green, etc.
+Faint inner numbers: UTC time.
 
-The faint innter text is the hour in UTC.  In this screenshot it's 1:45pm local time, UTC 21, the Hour Of Thunder.
+Colorful ring: the seasonal name of each hour.  Winter is blue, spring is green, summer is yellow, autumn is orange.
 
-The colored pie chart in the middle shows daylight, dusk, and night.  The hour hand also represents the sun.
+The colored pie chart in the middle shows sunset times: daylight, dusk, and night.  The hour hand is the sun traveling across the sky.
+
+---
 
 [seasonal-hours.ts](https://github.com/cinnamon-bun/seasonal-hours-clock/blob/main/src/seasonal-hours.ts) has a complete listing of hour names.
 
 This concept originated in [Twodays Crossing](https://github.com/earthstar-project/twodays-crossing), an Earthstar chat app.
+
+---
 
 [View in CodeSandbox](https://codesandbox.io/s/old-hooks-2cxi6?file=/README.md)
 
