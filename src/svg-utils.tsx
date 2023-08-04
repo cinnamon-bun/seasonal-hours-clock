@@ -99,6 +99,13 @@ export let Pie = ({
   let outerPoints: number[][] = [];
   let innerPoints: number[][] = [];
 
+  if (angle2 - angle1 > 360) {
+    angle1 += 360;
+  }
+  while (angle2 < angle1) {
+    angle2 += 360;
+  }
+
   let pointEveryNDegrees = 3;
   let n =
     Math.max(1, Math.ceil(Math.abs(angle1 - angle2) / pointEveryNDegrees)) + 1;
