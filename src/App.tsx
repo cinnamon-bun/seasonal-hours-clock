@@ -11,6 +11,8 @@ import { sFillDebug, sFillSeasonLookup, sLineDebug } from "./styles";
 import { useTimer } from "./hooks";
 import { hourTable } from "./seasonal-hours";
 
+let url = new URL(window.location.href);
+
 //================================================================================
 // LOCATION
 
@@ -50,7 +52,18 @@ let requestLocFromBrowser = async (): Promise<Location | null> => {
 };
 
 let obtainLocSomehow = async (): Promise<Location | null> => {
-  // first try to load from localstorage
+  // first try to read from url
+  const lat_string = url.searchParams.get("lat");
+  const lon_string = url.searchParams.get("lon");
+
+  const lat = lat_string ? parseFloat(lat_string) : NaN;
+  const lon = lon_string ? parseFloat(lon_string) : NaN;
+
+  if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
+    return { lat, lon };
+  }
+
+  // otherwise try to load from localstorage
   let loc = loadLocFromStorage();
   if (loc !== null) {
     console.log("--- location: loaded from localstorage");
@@ -90,6 +103,28 @@ let hourToString = (n: number): string => {
   return `${nToUse}`;
 };
 
+function get_highlighted_hours(url: URL): Set<number> {
+  const hours = new Set<number>();
+
+  for (const highlight_string of url.searchParams.getAll("hl")) {
+    const as_number = parseInt(highlight_string, 10);
+    if (!isNaN(as_number) && 0 <= as_number && as_number < 24) {
+      hours.add(as_number);
+    } else {
+      const low = highlight_string.toLowerCase();
+      for (let i = 0; i < 24; i++) {
+        if (low === hourTable[i].shortName) {
+          hours.add(i);
+        }
+      }
+    }
+  }
+
+  return hours;
+}
+
+const highlighted_hours = get_highlighted_hours(url);
+
 export default function App() {
   let redrawTick = useTimer(config.redrawEveryNSeconds * 1000);
   let recalcSunTick = useTimer(1000 * 60 * 60 * 6); // recalc sun every 6 hours
@@ -119,6 +154,13 @@ export default function App() {
   let radMax = (res / 2) * 0.98;
   let now = new Date();
   let hoursOffset = now.getTimezoneOffset() / 60;
+  const offset_string = url.searchParams.get("offset");
+  if (offset_string != null) {
+    const offset = parseFloat(offset_string);
+    if (!Number.isNaN(offset)) {
+      hoursOffset = offset;
+    }
+  }
   let nowDayPct = dayPct(now); // range: 0-1 (midnight to midnight)
   return (
     <div className="App">
@@ -208,8 +250,30 @@ export default function App() {
               return {
                 angle: (360 * n) / 24,
                 text: shortNameTitle,
-                className: sFillSeasonLookup[hourOf.season],
-                classNameText: "sFillInk"
+                className: `${sFillSeasonLookup[hourOf.season]} ${
+                  highlighted_hours.has(n) ? "sHighlight" : ""
+                }`,
+                classNameText: `sFillInk ${
+                  highlighted_hours.has(n) ? "sHighlight" : ""
+                }`
+              };
+            })}
+          />
+          {/* inner ring: background highlighting */}
+          <Dial
+            cx={cx}
+            cy={cy}
+            radMax={radMax * 0.8}
+            radMin={radMax * 0.727}
+            textAlign="center-line"
+            ticks={range(24).map((n) => {
+              return {
+                angle: (360 * n) / 24,
+                text: "",
+                className: `sNone ${
+                  highlighted_hours.has(n) ? "sHighlight" : ""
+                }`,
+                classNameText: ""
               };
             })}
           />
@@ -220,13 +284,16 @@ export default function App() {
             radMax={radMax * 0.8}
             radMin={radMax * 0.727}
             textAlign="center-line"
-            ticks={range(24).map((n) => ({
-              angle: (360 * n) / 24,
-              text: "U " + ("" + n).padStart(2, "0"),
-              className: "sNone",
-              classNameText: "sFillInkFaint"
-            }))}
+            ticks={range(24).map((n) => {
+              return {
+                angle: (360 * n) / 24,
+                text: "U " + ("" + n).padStart(2, "0"),
+                className: "sNone", // highlightng the background here makes it overlap the U00 text
+                classNameText: "sFillInkFaint"
+              };
+            })}
           />
+          {/* outer ring: emoji */}
           <Dial
             cx={cx}
             cy={cy}
@@ -239,7 +306,9 @@ export default function App() {
               return {
                 angle: (360 * n) / 24,
                 text: moji,
-                className: "sNone",
+                className: `sNone ${
+                  highlighted_hours.has(n) ? "sHighlight" : ""
+                }`,
                 classNameText: "sFillInkFaint"
               };
             })}
