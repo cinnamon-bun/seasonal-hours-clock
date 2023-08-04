@@ -2,6 +2,7 @@
   --cPage: rgb(0, 0, 0);
   --cInk: #eb5;
   --cInkFaint: rgb(91, 68, 38);
+  --cInkHighlight: rgb(255, 211, 123);
 }
 
 @media (prefers-color-scheme: light) {
@@ -9,6 +10,7 @@
     --cPage: rgb(235, 239, 252);
     --cInk: rgb(189, 126, 0);
     --cInkFaint: rgb(218, 184, 139);
+    --cInkHighlight: rgb(175, 129, 2);
   }
 }
 
@@ -24,7 +26,7 @@ a {
 
 @media (prefers-color-scheme: light) {
   a {
-    color: rgb(219, 219, 219);
+    color: rgb(207, 207, 207);
   }
 }
 
@@ -104,7 +106,37 @@ a {
   fill: rgb(70, 62, 108);
 }
 
+.sNone.sHighlight {
+  fill: rgb(65, 31, 65);
+}
 
+.sFillInk.sHighlight {
+  fill: var(--cInkHighlight);
+}
+
+.sFillSpring.sHighlight {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(95, 139, 95);
+}
+
+.sFillSummer.sHighlight {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(156, 129, 64);
+}
+
+.sFillAutumn.sHighlight {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(161, 107, 73);
+}
+
+.sFillWinter.sHighlight {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(108, 96, 163);
+}
 
 @media (prefers-color-scheme: light) {
   .sDay {
@@ -170,5 +202,37 @@ a {
     stroke: var(--cPage);
     stroke-width: 2;
     fill: rgb(215, 209, 248);
+  }
+
+  .sNone.sHighlight {
+    fill: rgb(255, 202, 228);
+  }
+
+  .sFillInk.sHighlight {
+    fill: var(--cInkHighlight);
+  }
+
+  .sFillSpring.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(145, 225, 145);
+  }
+
+  .sFillSummer.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(233, 196, 111);
+  }
+
+  .sFillAutumn.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(230, 183, 172);
+  }
+
+  .sFillWinter.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(188, 177, 248);
   }
 }

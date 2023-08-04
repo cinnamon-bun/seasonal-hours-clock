@@ -81,23 +81,13 @@ let computeSunTimes = (loc: Location | null) => {
 // MAIN
 
 let hourToString = (n: number): string => {
-  if (n === 12) {
-    return "Noon";
+  const nToUse = (n + 12) % 24;
+
+  if (nToUse < 10) {
+    return `0${nToUse}`;
   }
-  if (n === 0) {
-    return "Midnight";
-  }
-  if (config.useAmPm) {
-    let isAm = n <= 11;
-    let ampm = isAm ? "a" : "p";
-    let n2 = n % 12;
-    if (n2 === 0) {
-      n2 = 12;
-    }
-    return `${n2}${ampm}`;
-  } else {
-    return ("" + n).padStart(2, "0");
-  }
+
+  return `${nToUse}`;
 };
 
 export default function App() {
@@ -237,6 +227,23 @@ export default function App() {
               classNameText: "sFillInkFaint"
             }))}
           />
+          <Dial
+            cx={cx}
+            cy={cy}
+            radMax={radMax * 1.01}
+            radMin={radMax * 0.9}
+            textAlign="center-range"
+            ticks={range(24).map((n) => {
+              let moji = hourTable[n].emoji;
+
+              return {
+                angle: (360 * n) / 24,
+                text: moji,
+                className: "sNone",
+                classNameText: "sFillInkFaint"
+              };
+            })}
+          />
         </Rotate>
 
         {/* outer ring: local time */}
@@ -249,7 +256,7 @@ export default function App() {
           textScale={0.62}
           ticks={range(24).map((n) => ({
             angle: (360 * n) / 24,
-            text: hourToString((n + 12) % 24),
+            text: hourToString(n),
             className: "sNone",
             classNameText: "sFillInk"
           }))}

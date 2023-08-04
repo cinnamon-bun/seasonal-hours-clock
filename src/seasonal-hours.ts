@@ -23,136 +23,136 @@ export let hourTable: Record<number, HourOf> = {
     season: "winter",
     shortName: "candle",
     longName: "candle hour",
-    emoji: "🕯",
+    emoji: "🕯"
   },
   1: {
     season: "winter",
     shortName: "ice",
     longName: "hour of ice",
-    emoji: "❄️",
+    emoji: "❄️"
   },
   2: {
     season: "winter",
     shortName: "comet",
     longName: "hour of the comet",
-    emoji: "☄️",
+    emoji: "☄️"
   },
   3: { season: "winter", shortName: "owl", longName: "owl hour", emoji: "🦉" },
   4: {
     season: "winter",
     shortName: "yarn",
     longName: "yarn hour",
-    emoji: "🧶",
+    emoji: "🧶"
   },
   5: {
     season: "winter",
     shortName: "mist",
     longName: "hour of mist",
-    emoji: "🌫",
+    emoji: "🌫"
   },
   6: {
     season: "spring",
     shortName: "sprout",
     longName: "sprout hour",
-    emoji: "🌱",
+    emoji: "🌱"
   },
   7: {
     season: "spring",
     shortName: "rainbow",
     longName: "rainbow hour",
-    emoji: "🌈",
+    emoji: "🌈"
   },
   8: {
     season: "spring",
     shortName: "worm",
     longName: "worm hour",
-    emoji: "🪱",
+    emoji: "🪱"
   },
   9: {
     season: "spring",
     shortName: "rabbit",
     longName: "rabbit hour",
-    emoji: "🐇",
+    emoji: "🐇"
   },
   10: {
     season: "spring",
     shortName: "blossom",
     longName: "blossom hour",
-    emoji: "🌸",
+    emoji: "🌸"
   },
   11: {
     season: "spring",
     shortName: "nest",
     longName: "nest hour",
-    emoji: "🪺",
+    emoji: "🪺"
   },
   12: {
     season: "summer",
     shortName: "coral",
     longName: "coral hour",
-    emoji: "🪸",
+    emoji: "🪸"
   },
   13: {
     season: "summer",
     shortName: "cherry",
     longName: "cherry hour",
-    emoji: "🍒",
+    emoji: "🍒"
   },
   14: { season: "summer", shortName: "bee", longName: "bee hour", emoji: "🐝" },
   15: {
     season: "summer",
     shortName: "melon",
     longName: "melon hour",
-    emoji: "🍉",
+    emoji: "🍉"
   },
   16: {
     season: "summer",
     shortName: "seashell",
     longName: "seashell hour",
-    emoji: "🐚",
+    emoji: "🐚"
   },
   17: {
     season: "summer",
     shortName: "dragon",
     longName: "hour of the dragon",
-    emoji: "🐉",
+    emoji: "🐉"
   },
   18: {
     season: "autumn",
     shortName: "chestnut",
     longName: "chestnut hour",
-    emoji: "🌰",
+    emoji: "🌰"
   },
   19: {
     season: "autumn",
     shortName: "kite",
     longName: "hour of the kite",
-    emoji: "🪁",
+    emoji: "🪁"
   },
   20: {
     season: "autumn",
     shortName: "mushroom",
     longName: "mushroom hour",
-    emoji: "🍄",
+    emoji: "🍄"
   },
   21: {
     season: "autumn",
     shortName: "lightning",
     longName: "lightning hour",
-    emoji: "⚡️",
+    emoji: "⚡️"
   },
   22: {
     season: "autumn",
     shortName: "mountain",
     longName: "hour of the mountain",
-    emoji: "⛰",
+    emoji: "⛰"
   },
   23: {
     season: "autumn",
     shortName: "lantern",
     longName: "lantern hour",
-    emoji: "🏮",
-  },
+    emoji: "🏮"
+  }
 };
 
 export let getUtcHour = (): number => {
