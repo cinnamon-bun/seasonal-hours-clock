@@ -32,7 +32,7 @@ You can specify a latitude and longitude in the url that is used for displaying 
 You can specify an offset from utc in the url to override the time displayed in the outer circle, by adding a parameter `offset=<float>` to the url, for example [`https://seasonalclock.org/?offset=5`](https://seasonalclock.org/?offset=5). Combine this with setting latitude and longitude to create links that show local time and sun hours for arbitrary locations:
 
 - Berlin in summer (latitude 52.31 degrees, longitude 13.24 degrees, UTC+2): [`https://seasonalclock.org/?lat=52.31&lon=13.24&offset=2`](https://seasonalclock.org/?lat=52.31&lon=13.24&offset=2)
-- Wellington (latitude 41.17 degrees, longitude 174.46 degrees, UTC+12): [`https://seasonalclock.org/?lat=41.17&lon=174.46&offset=12`](https://seasonalclock.org/?lat=41.17&lon=174.46&offset=12)
+- Wellington (latitude -41.17 degrees, longitude 174.46 degrees, UTC+12): [`https://seasonalclock.org/?lat=-41.17&lon=174.46&offset=12`](https://seasonalclock.org/?lat=-41.17&lon=174.46&offset=12)
 
 ---
 
