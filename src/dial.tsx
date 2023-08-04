@@ -4,7 +4,6 @@ import {
     Rotate,
     Pie,
 } from './svg-utils';
-import { cInk } from "./styles";
 
 //================================================================================
 // MAIN
@@ -12,8 +11,8 @@ import { cInk } from "./styles";
 export interface Tick {
     angle: number,
     text?: string,
-    bgStyle?: React.CSSProperties,
-    cText?: string,
+    className?: string,
+    classNameText?: string,
 }
 interface DialProps {
     cx: number,
@@ -43,18 +42,14 @@ export let Dial = (props: DialProps) => {
                     angle1={tick.angle}
                     angle2={tick.angle + tickAngleWidth}
                     rMin={radMin} rMax={radMax}
-                    style={tick.bgStyle}
+                    className={tick.className}
                     />
                 <Rotate cx={cx} cy={cy} angle={tick.angle + textRotExtra}>
                     <text x={cx} y={cy - (radMin + radMax)/2}
                         textAnchor={textAlign === 'left' ? 'left' : 'middle'}
                         dominantBaseline="mathematical"
                         fontSize={(radMax - radMin) * (textScale as number)}
-                        style={{
-                            stroke: 'none',
-                            fill: tick.cText || cInk,
-                            //fontWeight: 'bold',
-                        }}
+                        className={tick.classNameText || 'sFillInk'}
                         >
                         {tick.text}
                     </text>

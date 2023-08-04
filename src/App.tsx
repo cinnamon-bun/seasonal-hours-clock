@@ -7,20 +7,7 @@ import { config } from "./config";
 import { dayPct, nop, range } from "./util";
 import { Pie, Rec, Rotate } from "./svg-utils";
 import { Dial } from "./dial";
-import {
-  cInk,
-  cInkFaint,
-  sCivilDusk,
-  sDay,
-  sFillDebug,
-  sFillInk,
-  sFillSeasonLookup,
-  sLineDebug,
-  sLineInk,
-  sNauticalDusk,
-  sNight,
-  sNone,
-} from "./styles";
+import { sFillDebug, sFillSeasonLookup, sLineDebug } from "./styles";
 import { useTimer } from "./hooks";
 import { hourTable } from "./seasonal-hours";
 
@@ -49,14 +36,14 @@ let requestLocFromBrowser = async (): Promise<Location | null> => {
       (result) => {
         let loc: Location = {
           lat: result.coords.latitude,
-          lon: result.coords.longitude,
+          lon: result.coords.longitude
         };
         res(loc);
       },
       (err) => {
         console.warn(err);
         res(null);
-      },
+      }
     );
   });
   return prom;
@@ -94,13 +81,23 @@ let computeSunTimes = (loc: Location | null) => {
 // MAIN
 
 let hourToString = (n: number): string => {
-  const nToUse = (n + 12) % 24;
-
-  if (nToUse < 10) {
-    return `0${nToUse}`;
+  if (n === 12) {
+    return "Noon";
   }
-
-  return `${nToUse}`;
+  if (n === 0) {
+    return "Midnight";
+  }
+  if (config.useAmPm) {
+    let isAm = n <= 11;
+    let ampm = isAm ? "a" : "p";
+    let n2 = n % 12;
+    if (n2 === 0) {
+      n2 = 12;
+    }
+    return `${n2}${ampm}`;
+  } else {
+    return ("" + n).padStart(2, "0");
+  }
 };
 
 export default function App() {
@@ -142,19 +139,17 @@ export default function App() {
         <circle cx={cx} cy={cy} r={res / 2} style={sLineDebug} />
 
         {/* daylight */}
-        {sunTimes !== null && config.showSunTimes
-          ? (
-            <Pie
-              cx={cx}
-              cy={cy}
-              angle1={dayPct(sunTimes.sunrise) * 360 + 180}
-              angle2={dayPct(sunTimes.sunset) * 360 + 180}
-              rMin={radMax * 0}
-              rMax={radMax * 0.7}
-              style={sDay}
-            />
-          )
-          : undefined}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={dayPct(sunTimes.sunrise) * 360 + 180}
+            angle2={dayPct(sunTimes.sunset) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sDay"}
+          />
+        ) : undefined}
 
         {/* sun */}
         <Rotate cx={cx} cy={cy} angle={nowDayPct * 360}>
@@ -162,54 +157,48 @@ export default function App() {
             cx={cx}
             cy={cy + radMax * 0.5}
             r={radMax * 0.035}
-            style={sFillInk}
+            className={"sFillInk"}
           />
         </Rotate>
 
         {/* sunset to civil dusk */}
-        {sunTimes !== null && config.showSunTimes
-          ? (
-            <Pie
-              cx={cx}
-              cy={cy}
-              angle1={dayPct(sunTimes.sunset) * 360 - 180}
-              angle2={dayPct(sunTimes.sunrise) * 360 + 180}
-              rMin={radMax * 0}
-              rMax={radMax * 0.7}
-              style={sCivilDusk}
-            />
-          )
-          : undefined}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={dayPct(sunTimes.sunset) * 360 - 180}
+            angle2={dayPct(sunTimes.sunrise) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sCivilDusk"}
+          />
+        ) : undefined}
 
         {/* civil dusk to nautical dusk */}
-        {sunTimes !== null && config.showSunTimes
-          ? (
-            <Pie
-              cx={cx}
-              cy={cy}
-              angle1={dayPct(sunTimes.dusk) * 360 - 180}
-              angle2={dayPct(sunTimes.dawn) * 360 + 180}
-              rMin={radMax * 0}
-              rMax={radMax * 0.7}
-              style={sNauticalDusk}
-            />
-          )
-          : undefined}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={dayPct(sunTimes.dusk) * 360 - 180}
+            angle2={dayPct(sunTimes.dawn) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sNauticalDusk"}
+          />
+        ) : undefined}
 
         {/* nautical dusk through night */}
-        {sunTimes !== null && config.showSunTimes
-          ? (
-            <Pie
-              cx={cx}
-              cy={cy}
-              angle1={dayPct(sunTimes.nauticalDusk) * 360 - 180}
-              angle2={dayPct(sunTimes.nauticalDawn) * 360 + 180}
-              rMin={radMax * 0}
-              rMax={radMax * 0.7}
-              style={sNight}
-            />
-          )
-          : undefined}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={dayPct(sunTimes.nauticalDusk) * 360 - 180}
+            angle2={dayPct(sunTimes.nauticalDawn) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sNight"}
+          />
+        ) : undefined}
 
         {/* season hours and UTC labels */}
         <Rotate cx={cx} cy={cy} angle={((12 - hoursOffset) * 360) / 24}>
@@ -224,13 +213,13 @@ export default function App() {
             ticks={range(24).map((n) => {
               let hourOf = hourTable[n];
               // title case
-              let shortNameTitle = hourOf.shortName[0].toUpperCase() +
-                hourOf.shortName.slice(1);
+              let shortNameTitle =
+                hourOf.shortName[0].toUpperCase() + hourOf.shortName.slice(1);
               return {
                 angle: (360 * n) / 24,
                 text: shortNameTitle,
-                bgStyle: sFillSeasonLookup[hourOf.season],
-                cText: cInk,
+                className: sFillSeasonLookup[hourOf.season],
+                classNameText: "sFillInk"
               };
             })}
           />
@@ -244,26 +233,9 @@ export default function App() {
             ticks={range(24).map((n) => ({
               angle: (360 * n) / 24,
               text: "U " + ("" + n).padStart(2, "0"),
-              bgStyle: sNone,
-              cText: cInkFaint,
+              className: "sNone",
+              classNameText: "sFillInkFaint"
             }))}
-          />
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={radMax * 1.01}
-            radMin={radMax * 0.9}
-            textAlign="center-range"
-            ticks={range(24).map((n) => {
-              let moji = hourTable[n].emoji;
-
-              return {
-                angle: (360 * n) / 24,
-                text: moji,
-                bgStyle: sNone,
-                cText: cInkFaint,
-              };
-            })}
           />
         </Rotate>
 
@@ -277,9 +249,9 @@ export default function App() {
           textScale={0.62}
           ticks={range(24).map((n) => ({
             angle: (360 * n) / 24,
-            text: hourToString(n),
-            bgStyle: sNone,
-            cText: cInk,
+            text: hourToString((n + 12) % 24),
+            className: "sNone",
+            classNameText: "sFillInk"
           }))}
         />
 
@@ -290,7 +262,7 @@ export default function App() {
             y1={cy + radMax * 0.5}
             x2={cx}
             y2={cy + radMax * 0.82}
-            style={sLineInk}
+            className={"sLineInk"}
           />
         </Rotate>
       </svg>
