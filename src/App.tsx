@@ -161,7 +161,7 @@ export default function App() {
       hoursOffset = offset;
     }
   }
-  let nowDayPct = dayPct(now); // range: 0-1 (midnight to midnight)
+  let nowDayPct = dayPct(now, hoursOffset); // range: 0-1 (midnight to midnight)
   return (
     <div className="App">
       <svg width={config.res} height={config.res} style={sFillDebug}>
@@ -175,11 +175,54 @@ export default function App() {
           <Pie
             cx={cx}
             cy={cy}
-            angle1={dayPct(sunTimes.sunrise) * 360 + 180}
-            angle2={dayPct(sunTimes.sunset) * 360 + 180}
+            angle1={(dayPct(sunTimes.sunrise) + hoursOffset / 24) * 360 - 180}
+            angle2={(dayPct(sunTimes.sunset) + hoursOffset / 24) * 360 + 180}
             rMin={radMax * 0}
             rMax={radMax * 0.7}
             className={"sDay"}
+          />
+        ) : undefined}
+
+        {/* sunset to civil dusk */}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={(dayPct(sunTimes.sunset) + hoursOffset / 24) * 360 + 180}
+            angle2={(dayPct(sunTimes.sunrise) + hoursOffset / 24) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sCivilDusk"}
+          />
+        ) : undefined}
+
+        {/* civil dusk to nautical dusk */}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={(dayPct(sunTimes.dusk) + hoursOffset / 24) * 360 + 180}
+            angle2={(dayPct(sunTimes.dawn) + hoursOffset / 24) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sNauticalDusk"}
+          />
+        ) : undefined}
+
+        {/* nautical dusk through night */}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={
+              (dayPct(sunTimes.nauticalDusk) + hoursOffset / 24) * 360 + 180
+            }
+            angle2={
+              (dayPct(sunTimes.nauticalDawn) + hoursOffset / 24) * 360 + 180
+            }
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sNight"}
           />
         ) : undefined}
 
@@ -192,45 +235,6 @@ export default function App() {
             className={"sFillInk"}
           />
         </Rotate>
-
-        {/* sunset to civil dusk */}
-        {sunTimes !== null && config.showSunTimes ? (
-          <Pie
-            cx={cx}
-            cy={cy}
-            angle1={dayPct(sunTimes.sunset) * 360 - 180}
-            angle2={dayPct(sunTimes.sunrise) * 360 + 180}
-            rMin={radMax * 0}
-            rMax={radMax * 0.7}
-            className={"sCivilDusk"}
-          />
-        ) : undefined}
-
-        {/* civil dusk to nautical dusk */}
-        {sunTimes !== null && config.showSunTimes ? (
-          <Pie
-            cx={cx}
-            cy={cy}
-            angle1={dayPct(sunTimes.dusk) * 360 - 180}
-            angle2={dayPct(sunTimes.dawn) * 360 + 180}
-            rMin={radMax * 0}
-            rMax={radMax * 0.7}
-            className={"sNauticalDusk"}
-          />
-        ) : undefined}
-
-        {/* nautical dusk through night */}
-        {sunTimes !== null && config.showSunTimes ? (
-          <Pie
-            cx={cx}
-            cy={cy}
-            angle1={dayPct(sunTimes.nauticalDusk) * 360 - 180}
-            angle2={dayPct(sunTimes.nauticalDawn) * 360 + 180}
-            rMin={radMax * 0}
-            rMax={radMax * 0.7}
-            className={"sNight"}
-          />
-        ) : undefined}
 
         {/* season hours and UTC labels */}
         <Rotate cx={cx} cy={cy} angle={((12 - hoursOffset) * 360) / 24}>

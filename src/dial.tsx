@@ -49,7 +49,7 @@ export let Dial = (props: DialProps) => {
             angle2={
               tick.angle +
               tickAngleWidth +
-              0.4 /* so that the background does not show between adjacent slices */
+              0.4 /* background does not show between adjacent slices */
             }
             rMin={radMin}
             rMax={radMax}
