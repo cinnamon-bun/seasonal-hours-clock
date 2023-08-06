@@ -25,7 +25,7 @@ summer is yellow, autumn is orange.
 The colored pie chart in the middle shows sunset times: daylight, dusk, and
 night. The hour hand is the sun traveling across the sky.
 
-You can highlight certain hours by adding search parameters of the form `hl=<integer>` or `hl=<hour name>` to the url, for example [`https://seasonalclock.org/?hl=6&h=rainbow`](https://seasonalclock.org/?hl=6&h=rainbow) to highlight sprout hour (UTC+6) and rainbow hour.
+You can highlight certain hours by adding search parameters of the form `hl=<integer>` or `hl=<hour name>` to the url, for example [`https://seasonalclock.org/?hl=6&hl=rainbow`](https://seasonalclock.org/?hl=6&hl=rainbow) to highlight sprout hour (UTC+6) and rainbow hour.
 
 You can specify a latitude and longitude in the url that is used for displaying sun hours, by adding search parameters of the form `lat=<float>` and `lon=<float>` to the url (both have to be present), for example [`https://seasonalclock.org/?lat=52.31&lon=13.24`](https://seasonalclock.org/?lat=52.31&lon=13.24).
 
