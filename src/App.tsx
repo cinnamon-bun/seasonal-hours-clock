@@ -7,22 +7,11 @@ import { config } from "./config";
 import { dayPct, nop, range } from "./util";
 import { Pie, Rec, Rotate } from "./svg-utils";
 import { Dial } from "./dial";
-import {
-  cInk,
-  cInkFaint,
-  sCivilDusk,
-  sDay,
-  sFillDebug,
-  sFillInk,
-  sFillSeasonLookup,
-  sLineDebug,
-  sLineInk,
-  sNauticalDusk,
-  sNight,
-  sNone,
-} from "./styles";
+import { sFillDebug, sFillSeasonLookup, sLineDebug } from "./styles";
 import { useTimer } from "./hooks";
 import { hourTable } from "./seasonal-hours";
+
+let url = new URL(window.location.href);
 
 //================================================================================
 // LOCATION
@@ -49,21 +38,32 @@ let requestLocFromBrowser = async (): Promise<Location | null> => {
       (result) => {
         let loc: Location = {
           lat: result.coords.latitude,
-          lon: result.coords.longitude,
+          lon: result.coords.longitude
         };
         res(loc);
       },
       (err) => {
         console.warn(err);
         res(null);
-      },
+      }
     );
   });
   return prom;
 };
 
 let obtainLocSomehow = async (): Promise<Location | null> => {
-  // first try to load from localstorage
+  // first try to read from url
+  const lat_string = url.searchParams.get("lat");
+  const lon_string = url.searchParams.get("lon");
+
+  const lat = lat_string ? parseFloat(lat_string) : NaN;
+  const lon = lon_string ? parseFloat(lon_string) : NaN;
+
+  if (!Number.isNaN(lat) && !Number.isNaN(lon)) {
+    return { lat, lon };
+  }
+
+  // otherwise try to load from localstorage
   let loc = loadLocFromStorage();
   if (loc !== null) {
     console.log("--- location: loaded from localstorage");
@@ -103,6 +103,28 @@ let hourToString = (n: number): string => {
   return `${nToUse}`;
 };
 
+function get_highlighted_hours(url: URL): Set<number> {
+  const hours = new Set<number>();
+
+  for (const highlight_string of url.searchParams.getAll("hl")) {
+    const as_number = parseInt(highlight_string, 10);
+    if (!isNaN(as_number) && 0 <= as_number && as_number < 24) {
+      hours.add(as_number);
+    } else {
+      const low = highlight_string.toLowerCase();
+      for (let i = 0; i < 24; i++) {
+        if (low === hourTable[i].shortName) {
+          hours.add(i);
+        }
+      }
+    }
+  }
+
+  return hours;
+}
+
+const highlighted_hours = get_highlighted_hours(url);
+
 export default function App() {
   let redrawTick = useTimer(config.redrawEveryNSeconds * 1000);
   let recalcSunTick = useTimer(1000 * 60 * 60 * 6); // recalc sun every 6 hours
@@ -132,7 +154,14 @@ export default function App() {
   let radMax = (res / 2) * 0.98;
   let now = new Date();
   let hoursOffset = now.getTimezoneOffset() / 60;
-  let nowDayPct = dayPct(now); // range: 0-1 (midnight to midnight)
+  const offset_string = url.searchParams.get("offset");
+  if (offset_string != null) {
+    const offset = parseFloat(offset_string);
+    if (!Number.isNaN(offset)) {
+      hoursOffset = offset;
+    }
+  }
+  let nowDayPct = dayPct(now, hoursOffset); // range: 0-1 (midnight to midnight)
   return (
     <div className="App">
       <svg width={config.res} height={config.res} style={sFillDebug}>
@@ -142,19 +171,60 @@ export default function App() {
         <circle cx={cx} cy={cy} r={res / 2} style={sLineDebug} />
 
         {/* daylight */}
-        {sunTimes !== null && config.showSunTimes
-          ? (
-            <Pie
-              cx={cx}
-              cy={cy}
-              angle1={dayPct(sunTimes.sunrise) * 360 + 180}
-              angle2={dayPct(sunTimes.sunset) * 360 + 180}
-              rMin={radMax * 0}
-              rMax={radMax * 0.7}
-              style={sDay}
-            />
-          )
-          : undefined}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={(dayPct(sunTimes.sunrise) + hoursOffset / 24) * 360 - 180}
+            angle2={(dayPct(sunTimes.sunset) + hoursOffset / 24) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sDay"}
+          />
+        ) : undefined}
+
+        {/* sunset to civil dusk */}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={(dayPct(sunTimes.sunset) + hoursOffset / 24) * 360 + 180}
+            angle2={(dayPct(sunTimes.sunrise) + hoursOffset / 24) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sCivilDusk"}
+          />
+        ) : undefined}
+
+        {/* civil dusk to nautical dusk */}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={(dayPct(sunTimes.dusk) + hoursOffset / 24) * 360 + 180}
+            angle2={(dayPct(sunTimes.dawn) + hoursOffset / 24) * 360 + 180}
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sNauticalDusk"}
+          />
+        ) : undefined}
+
+        {/* nautical dusk through night */}
+        {sunTimes !== null && config.showSunTimes ? (
+          <Pie
+            cx={cx}
+            cy={cy}
+            angle1={
+              (dayPct(sunTimes.nauticalDusk) + hoursOffset / 24) * 360 + 180
+            }
+            angle2={
+              (dayPct(sunTimes.nauticalDawn) + hoursOffset / 24) * 360 + 180
+            }
+            rMin={radMax * 0}
+            rMax={radMax * 0.7}
+            className={"sNight"}
+          />
+        ) : undefined}
 
         {/* sun */}
         <Rotate cx={cx} cy={cy} angle={nowDayPct * 360}>
@@ -162,54 +232,9 @@ export default function App() {
             cx={cx}
             cy={cy + radMax * 0.5}
             r={radMax * 0.035}
-            style={sFillInk}
+            className={"sFillInk"}
           />
         </Rotate>
-
-        {/* sunset to civil dusk */}
-        {sunTimes !== null && config.showSunTimes
-          ? (
-            <Pie
-              cx={cx}
-              cy={cy}
-              angle1={dayPct(sunTimes.sunset) * 360 - 180}
-              angle2={dayPct(sunTimes.sunrise) * 360 + 180}
-              rMin={radMax * 0}
-              rMax={radMax * 0.7}
-              style={sCivilDusk}
-            />
-          )
-          : undefined}
-
-        {/* civil dusk to nautical dusk */}
-        {sunTimes !== null && config.showSunTimes
-          ? (
-            <Pie
-              cx={cx}
-              cy={cy}
-              angle1={dayPct(sunTimes.dusk) * 360 - 180}
-              angle2={dayPct(sunTimes.dawn) * 360 + 180}
-              rMin={radMax * 0}
-              rMax={radMax * 0.7}
-              style={sNauticalDusk}
-            />
-          )
-          : undefined}
-
-        {/* nautical dusk through night */}
-        {sunTimes !== null && config.showSunTimes
-          ? (
-            <Pie
-              cx={cx}
-              cy={cy}
-              angle1={dayPct(sunTimes.nauticalDusk) * 360 - 180}
-              angle2={dayPct(sunTimes.nauticalDawn) * 360 + 180}
-              rMin={radMax * 0}
-              rMax={radMax * 0.7}
-              style={sNight}
-            />
-          )
-          : undefined}
 
         {/* season hours and UTC labels */}
         <Rotate cx={cx} cy={cy} angle={((12 - hoursOffset) * 360) / 24}>
@@ -224,13 +249,35 @@ export default function App() {
             ticks={range(24).map((n) => {
               let hourOf = hourTable[n];
               // title case
-              let shortNameTitle = hourOf.shortName[0].toUpperCase() +
-                hourOf.shortName.slice(1);
+              let shortNameTitle =
+                hourOf.shortName[0].toUpperCase() + hourOf.shortName.slice(1);
               return {
                 angle: (360 * n) / 24,
                 text: shortNameTitle,
-                bgStyle: sFillSeasonLookup[hourOf.season],
-                cText: cInk,
+                className: `${sFillSeasonLookup[hourOf.season]} ${
+                  highlighted_hours.has(n) ? "sHighlight" : ""
+                }`,
+                classNameText: `sFillInk ${
+                  highlighted_hours.has(n) ? "sHighlight" : ""
+                }`
+              };
+            })}
+          />
+          {/* inner ring: background highlighting */}
+          <Dial
+            cx={cx}
+            cy={cy}
+            radMax={radMax * 0.8}
+            radMin={radMax * 0.727}
+            textAlign="center-line"
+            ticks={range(24).map((n) => {
+              return {
+                angle: (360 * n) / 24,
+                text: "",
+                className: `sNone ${
+                  highlighted_hours.has(n) ? "sHighlight" : ""
+                }`,
+                classNameText: ""
               };
             })}
           />
@@ -241,13 +288,16 @@ export default function App() {
             radMax={radMax * 0.8}
             radMin={radMax * 0.727}
             textAlign="center-line"
-            ticks={range(24).map((n) => ({
-              angle: (360 * n) / 24,
-              text: "U " + ("" + n).padStart(2, "0"),
-              bgStyle: sNone,
-              cText: cInkFaint,
-            }))}
+            ticks={range(24).map((n) => {
+              return {
+                angle: (360 * n) / 24,
+                text: "U " + ("" + n).padStart(2, "0"),
+                className: "sNone", // highlightng the background here makes it overlap the U00 text
+                classNameText: "sFillInkFaint"
+              };
+            })}
           />
+          {/* outer ring: emoji */}
           <Dial
             cx={cx}
             cy={cy}
@@ -260,8 +310,10 @@ export default function App() {
               return {
                 angle: (360 * n) / 24,
                 text: moji,
-                bgStyle: sNone,
-                cText: cInkFaint,
+                className: `sNone ${
+                  highlighted_hours.has(n) ? "sHighlight" : ""
+                }`,
+                classNameText: "sFillInkFaint"
               };
             })}
           />
@@ -278,8 +330,8 @@ export default function App() {
           ticks={range(24).map((n) => ({
             angle: (360 * n) / 24,
             text: hourToString(n),
-            bgStyle: sNone,
-            cText: cInk,
+            className: "sNone",
+            classNameText: "sFillInk"
           }))}
         />
 
@@ -290,7 +342,7 @@ export default function App() {
             y1={cy + radMax * 0.5}
             x2={cx}
             y2={cy + radMax * 0.82}
-            style={sLineInk}
+            className={"sLineInk"}
           />
         </Rotate>
       </svg>

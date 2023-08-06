@@ -1,5 +1,238 @@
+:root {
+  --cPage: rgb(0, 0, 0);
+  --cInk: #eb5;
+  --cInkFaint: rgb(91, 68, 38);
+  --cInkHighlight: rgb(255, 211, 123);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --cPage: rgb(235, 239, 252);
+    --cInk: rgb(189, 126, 0);
+    --cInkFaint: rgb(218, 184, 139);
+    --cInkHighlight: rgb(175, 129, 2);
+  }
+}
+
+body {
+  background-color: var(--cPage);
+  color: var(--cInk);
+}
+
+a {
+  color: #333;
+  text-decoration: none;
+}
+
+@media (prefers-color-scheme: light) {
+  a {
+    color: rgb(207, 207, 207);
+  }
+}
+
+.github-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+}
 
 .App {
   font-family: sans-serif;
   text-align: center;
+}
+
+.sDay {
+  stroke: none;
+  fill: rgb(113, 92, 43);
+}
+
+.sCivilDusk {
+  stroke: none;
+  fill: rgb(99, 38, 53);
+}
+
+.sNauticalDusk {
+  stroke: none;
+  fill: rgb(39, 38, 53);
+}
+
+.sNight {
+  stroke: none;
+  fill: rgb(19, 17, 30);
+}
+
+.sNone {
+  stroke: none;
+  fill: none;
+}
+
+.sLineInk {
+  stroke: var(--cInk);
+  fill: none;
+  stroke-width: 2;
+}
+
+.sFillInk {
+  stroke: none;
+  fill: var(--cInk);
+}
+
+.sFillInkFaint {
+  stroke: none;
+  fill: var(--cInkFaint);
+}
+
+.sFillSpring {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(55, 87, 55);
+}
+
+.sFillSummer {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(113, 92, 43);
+}
+
+.sFillAutumn {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(108, 68, 44);
+}
+
+.sFillWinter {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(70, 62, 108);
+}
+
+.sNone.sHighlight {
+  fill: rgb(65, 31, 65);
+}
+
+.sFillInk.sHighlight {
+  fill: var(--cInkHighlight);
+}
+
+.sFillSpring.sHighlight {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(95, 139, 95);
+}
+
+.sFillSummer.sHighlight {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(156, 129, 64);
+}
+
+.sFillAutumn.sHighlight {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(161, 107, 73);
+}
+
+.sFillWinter.sHighlight {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(108, 96, 163);
+}
+
+@media (prefers-color-scheme: light) {
+  .sDay {
+    stroke: none;
+    fill: rgb(245, 218, 157);
+  }
+
+  .sCivilDusk {
+    stroke: none;
+    fill: rgb(240, 133, 160);
+  }
+
+  .sNauticalDusk {
+    stroke: none;
+    fill: rgb(123, 119, 177);
+  }
+
+  .sNight {
+    stroke: none;
+    fill: rgb(79, 73, 119);
+  }
+
+  .sNone {
+    stroke: none;
+    fill: none;
+  }
+
+  .sLineInk {
+    stroke: var(--cInk);
+    fill: none;
+    stroke-width: 2;
+  }
+
+  .sFillInk {
+    stroke: none;
+    fill: var(--cInk);
+  }
+
+  .sFillInkFaint {
+    stroke: none;
+    fill: var(--cInkFaint);
+  }
+
+  .sFillSpring {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(197, 235, 197);
+  }
+
+  .sFillSummer {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(241, 222, 177);
+  }
+
+  .sFillAutumn {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(247, 222, 216);
+  }
+
+  .sFillWinter {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(215, 209, 248);
+  }
+
+  .sNone.sHighlight {
+    fill: rgb(255, 202, 228);
+  }
+
+  .sFillInk.sHighlight {
+    fill: var(--cInkHighlight);
+  }
+
+  .sFillSpring.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(145, 225, 145);
+  }
+
+  .sFillSummer.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(233, 196, 111);
+  }
+
+  .sFillAutumn.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(230, 183, 172);
+  }
+
+  .sFillWinter.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(188, 177, 248);
+  }
 }

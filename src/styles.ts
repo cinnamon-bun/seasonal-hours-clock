@@ -1,82 +1,22 @@
 import * as React from "react";
-import { config } from './config';
+import { config } from "./config";
 import { Season } from "./seasonal-hours";
 
-//================================================================================
-// COLORS
-
-export let cPage = 'black';
-export let cInk = '#eb5';  // gold
-export let cInkFaint = 'rgb(91, 68, 38)';
-
-//================================================================================
-// STYLES
-
-export let sDay: React.CSSProperties = {
-    stroke: 'none',
-    fill: 'rgb(113, 92, 43)',
-};
-export let sCivilDusk: React.CSSProperties = {
-    stroke: 'none',
-    fill: 'rgb(99, 38, 53)',
-};
-export let sNauticalDusk: React.CSSProperties = {
-    stroke: 'none',
-    fill: 'rgb(39, 38, 53)',
-};
-export let sNight: React.CSSProperties = {
-    stroke: 'none',
-    fill: 'rgb(19, 17, 30)',
-};
-
-export let sNone: React.CSSProperties = {
-    stroke: 'none',
-    fill: 'none',
-};
-export let sLineInk: React.CSSProperties = {
-    stroke: cInk,
-    fill: 'none',
-    strokeWidth: 2,
-};
 export let sLineDebug: React.CSSProperties = {
-    stroke: config.showDebug ? '#080' : 'none',
-    fill: 'none',
+  stroke: config.showDebug ? "#080" : "none",
+  fill: "none"
 };
 export let sFillDebug: React.CSSProperties = {
-    stroke: cInk,
-    fill: config.showDebug ? 'rgba(0,128,0,0.3)' : 'none',
-};
-export let sFillInk: React.CSSProperties = {
-    stroke: 'none',
-    fill: cInk,
+  stroke: "#eb5",
+  fill: config.showDebug ? "rgba(0,128,0,0.3)" : "none"
 };
 
 //================================================================================
 // SEASONAL BACKGROUND STYLES
 
-let sSeasonBase: React.CSSProperties = {
-    stroke: cPage,
-    strokeWidth: 2,
-}
-export let sFillSpring: React.CSSProperties = {
-    ...sSeasonBase,
-    fill: 'rgb(55, 87, 55)',
-}
-export let sFillSummer: React.CSSProperties = {
-    ...sSeasonBase,
-    fill: 'rgb(113, 92, 43)',
-}
-export let sFillAutumn: React.CSSProperties = {
-    ...sSeasonBase,
-    fill: 'rgb(108, 68, 44)',
-}
-export let sFillWinter: React.CSSProperties = {
-    ...sSeasonBase,
-    fill: 'rgb(70, 62, 108)',
-}
-export let sFillSeasonLookup: Record<Season, React.CSSProperties> = {
-    'spring': sFillSpring,
-    'summer': sFillSummer,
-    'autumn': sFillAutumn,
-    'winter': sFillWinter,
-}
+export let sFillSeasonLookup: Record<Season, string> = {
+  spring: "sFillSpring",
+  summer: "sFillSummer",
+  autumn: "sFillAutumn",
+  winter: "sFillWinter"
+};
