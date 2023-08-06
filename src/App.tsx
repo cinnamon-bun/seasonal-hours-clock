@@ -227,7 +227,7 @@ export default function App() {
         ) : undefined}
 
         {/* sun */}
-        <Rotate cx={cx} cy={cy} angle={nowDayPct * 360}>
+        <Rotate cx={cx} cy={cy} angle={(nowDayPct + hoursOffset / 24) * 360}>
           <circle
             cx={cx}
             cy={cy + radMax * 0.5}
@@ -237,7 +237,7 @@ export default function App() {
         </Rotate>
 
         {/* season hours and UTC labels */}
-        <Rotate cx={cx} cy={cy} angle={((12 - hoursOffset) * 360) / 24}>
+        <Rotate cx={cx} cy={cy} angle={((12 + hoursOffset) * 360) / 24}>
           {/* season hours */}
           <Dial
             cx={cx}
@@ -303,6 +303,8 @@ export default function App() {
             cy={cy}
             radMax={radMax * 1.01}
             radMin={radMax * 0.9}
+            // radMax={radMax * 0.83} uncomment these to move emoji inside the clock
+            // radMin={radMax * 0.705} dont forget to fix highlighted backgrounds then
             textAlign="center-range"
             ticks={range(24).map((n) => {
               let moji = hourTable[n].emoji;
@@ -336,7 +338,7 @@ export default function App() {
         />
 
         {/* line of hour hand */}
-        <Rotate cx={cx} cy={cy} angle={nowDayPct * 360}>
+        <Rotate cx={cx} cy={cy} angle={(nowDayPct + hoursOffset / 24) * 360}>
           <line
             x1={cx}
             y1={cy + radMax * 0.5}
