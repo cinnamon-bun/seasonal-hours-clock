@@ -153,7 +153,7 @@ export default function App() {
   let cy = res / 2;
   let radMax = (res / 2) * 0.98;
   let now = new Date();
-  let hoursOffset = now.getTimezoneOffset() / 60;
+  let hoursOffset = -1 * (now.getTimezoneOffset() / 60);
   const offset_string = url.searchParams.get("offset");
   if (offset_string != null) {
     const offset = parseFloat(offset_string);
@@ -237,7 +237,7 @@ export default function App() {
         </Rotate>
 
         {/* season hours and UTC labels */}
-        <Rotate cx={cx} cy={cy} angle={((12 + hoursOffset) * 360) / 24}>
+        <Rotate cx={cx} cy={cy} angle={((12 + hoursOffset) / 24) * 360}>
           {/* season hours */}
           <Dial
             cx={cx}
@@ -303,8 +303,8 @@ export default function App() {
             cy={cy}
             radMax={radMax * 1.01}
             radMin={radMax * 0.9}
-            // radMax={radMax * 0.83} uncomment these to move emoji inside the clock
-            // radMin={radMax * 0.705} dont forget to fix highlighted backgrounds then
+            //radMax={radMax * 0.83} // uncomment these to move emoji inside the clock
+            //radMin={radMax * 0.705} // dont forget to fix highlighted backgrounds then
             textAlign="center-range"
             ticks={range(24).map((n) => {
               let moji = hourTable[n].emoji;
