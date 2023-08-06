@@ -161,7 +161,7 @@ export default function App() {
       hoursOffset = offset;
     }
   }
-  let nowDayPct = dayPct(now, hoursOffset); // range: 0-1 (midnight to midnight)
+  let nowDayPct = dayPct(now); // range: 0-1 (midnight to midnight)
   return (
     <div className="App">
       <svg width={config.res} height={config.res} style={sFillDebug}>
