@@ -5,8 +5,8 @@
 // this helps satisfy the linter that a variable is being used
 export let nop = (x: any): void => {};
 
-// given a date, return the fraction of the way it is through the day
-// from midnight to midnight, range 0-1, in utc.
+// given a date, return the fraction of the way it is through the (local) day
+// from midnight to midnight, range 0-1.
 export let dayPct = (date: Date): number => {
   return (
     date.getUTCHours() / 24 +
