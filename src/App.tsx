@@ -315,7 +315,7 @@ export default function App() {
                 className: `sNone ${
                   highlighted_hours.has(n) ? "sHighlight" : ""
                 }`,
-                classNameText: "sFillInkFaint"
+                classNameText: "iconText"
               };
             })}
           />

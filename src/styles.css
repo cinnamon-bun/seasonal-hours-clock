@@ -106,6 +106,11 @@ a {
   fill: rgb(70, 62, 108);
 }
 
+.iconText {
+  stroke: rgb(252, 243, 195);
+  fill: var(--cInkFaint);
+}
+
 .sNone.sHighlight {
   fill: rgb(65, 31, 65);
 }
@@ -202,6 +207,11 @@ a {
     stroke: var(--cPage);
     stroke-width: 2;
     fill: rgb(215, 209, 248);
+  }
+
+  .iconText {
+    stroke: rgb(199, 168, 28);
+    fill: var(--cInkFaint);
   }
 
   .sNone.sHighlight {
