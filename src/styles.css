@@ -107,8 +107,7 @@ a {
 }
 
 .iconText {
-  stroke: rgb(252, 243, 195);
-  fill: var(--cInkFaint);
+  font-variant-emoji: emoji;
 }
 
 .sNone.sHighlight {
@@ -207,11 +206,6 @@ a {
     stroke: var(--cPage);
     stroke-width: 2;
     fill: rgb(215, 209, 248);
-  }
-
-  .iconText {
-    stroke: rgb(199, 168, 28);
-    fill: var(--cInkFaint);
   }
 
   .sNone.sHighlight {
