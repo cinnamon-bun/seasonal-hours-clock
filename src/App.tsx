@@ -162,6 +162,9 @@ export default function App() {
     }
   }
   let nowDayPct = dayPct(now); // range: 0-1 (midnight to midnight)
+
+  const daylightRadiusFactor = 0.67;
+
   return (
     <div className="App">
       <svg width={config.res} height={config.res} style={sFillDebug}>
@@ -178,7 +181,7 @@ export default function App() {
             angle1={(dayPct(sunTimes.sunrise) + hoursOffset / 24) * 360 - 180}
             angle2={(dayPct(sunTimes.sunset) + hoursOffset / 24) * 360 + 180}
             rMin={radMax * 0}
-            rMax={radMax * 0.7}
+            rMax={radMax * daylightRadiusFactor}
             className={"sDay"}
           />
         ) : undefined}
@@ -191,7 +194,7 @@ export default function App() {
             angle1={(dayPct(sunTimes.sunset) + hoursOffset / 24) * 360 + 180}
             angle2={(dayPct(sunTimes.sunrise) + hoursOffset / 24) * 360 + 180}
             rMin={radMax * 0}
-            rMax={radMax * 0.7}
+            rMax={radMax * daylightRadiusFactor}
             className={"sCivilDusk"}
           />
         ) : undefined}
@@ -204,7 +207,7 @@ export default function App() {
             angle1={(dayPct(sunTimes.dusk) + hoursOffset / 24) * 360 + 180}
             angle2={(dayPct(sunTimes.dawn) + hoursOffset / 24) * 360 + 180}
             rMin={radMax * 0}
-            rMax={radMax * 0.7}
+            rMax={radMax * daylightRadiusFactor}
             className={"sNauticalDusk"}
           />
         ) : undefined}
@@ -221,7 +224,7 @@ export default function App() {
               (dayPct(sunTimes.nauticalDawn) + hoursOffset / 24) * 360 + 180
             }
             rMin={radMax * 0}
-            rMax={radMax * 0.7}
+            rMax={radMax * daylightRadiusFactor}
             className={"sNight"}
           />
         ) : undefined}
@@ -268,7 +271,7 @@ export default function App() {
             cx={cx}
             cy={cy}
             radMax={radMax * 0.8}
-            radMin={radMax * 0.727}
+            radMin={radMax * 0.715}
             textAlign="center-line"
             ticks={range(24).map((n) => {
               return {
@@ -297,14 +300,12 @@ export default function App() {
               };
             })}
           />
-          {/* outer ring: emoji */}
+          {/* inner ring: emoji */}
           <Dial
             cx={cx}
             cy={cy}
-            radMax={radMax * 1.01}
-            radMin={radMax * 0.9}
-            //radMax={radMax * 0.83} // uncomment these to move emoji inside the clock
-            //radMin={radMax * 0.705} // dont forget to fix highlighted backgrounds then
+            radMax={radMax * 0.82}
+            radMin={radMax * 0.715}
             textAlign="center-range"
             ticks={range(24).map((n) => {
               let moji = `${hourTable[n].emoji}\uFE0F`;
@@ -312,12 +313,27 @@ export default function App() {
               return {
                 angle: (360 * n) / 24,
                 text: moji,
-                className: `sNone ${
-                  highlighted_hours.has(n) ? "sHighlight" : ""
-                }`,
+                className: "sNone",
                 classNameText: "iconText"
               };
             })}
+          />
+          {/* outer ring: highlighting */}
+          <Dial
+            cx={cx}
+            cy={cy}
+            radMax={radMax * 1.01}
+            radMin={radMax * 0.9}
+            textAlign="center-line"
+            textScale={0.62}
+            ticks={range(24).map((n) => ({
+              angle: (360 * n) / 24,
+              text: "",
+              className: `sNone ${
+                highlighted_hours.has(n) ? "sHighlight" : ""
+              }`,
+              classNameText: ""
+            }))}
           />
         </Rotate>
 
