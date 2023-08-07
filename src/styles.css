@@ -106,6 +106,10 @@ a {
   fill: rgb(70, 62, 108);
 }
 
+.iconText {
+  font-variant-emoji: emoji;
+}
+
 .sNone.sHighlight {
   fill: rgb(65, 31, 65);
 }

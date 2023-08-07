@@ -23,7 +23,7 @@ export let hourTable: Record<number, HourOf> = {
     season: "winter",
     shortName: "candle",
     longName: "candle hour",
-    emoji: "🕯"
+    emoji: "🕯️"
   },
   1: {
     season: "winter",
@@ -48,7 +48,7 @@ export let hourTable: Record<number, HourOf> = {
     season: "winter",
     shortName: "mist",
     longName: "hour of mist",
-    emoji: "🌫"
+    emoji: "🌫️"
   },
   6: {
     season: "spring",
@@ -145,7 +145,7 @@ export let hourTable: Record<number, HourOf> = {
     season: "autumn",
     shortName: "mountain",
     longName: "hour of the mountain",
-    emoji: "⛰"
+    emoji: "⛰️"
   },
   23: {
     season: "autumn",

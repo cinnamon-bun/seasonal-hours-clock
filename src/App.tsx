@@ -307,7 +307,7 @@ export default function App() {
             //radMin={radMax * 0.705} // dont forget to fix highlighted backgrounds then
             textAlign="center-range"
             ticks={range(24).map((n) => {
-              let moji = hourTable[n].emoji;
+              let moji = `${hourTable[n].emoji}\uFE0F`;
 
               return {
                 angle: (360 * n) / 24,
@@ -315,7 +315,7 @@ export default function App() {
                 className: `sNone ${
                   highlighted_hours.has(n) ? "sHighlight" : ""
                 }`,
-                classNameText: "sFillInkFaint"
+                classNameText: "iconText"
               };
             })}
           />
