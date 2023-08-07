@@ -19,9 +19,21 @@ interface DialProps {
   ticks: Tick[];
   textScale?: number; // default 0.6
   textAlign: "left" | "center-line" | "center-range";
+  dominantBaseline?: string;
+  fontSize?: number;
 }
 export let Dial = (props: DialProps) => {
-  let { cx, cy, radMin, radMax, ticks, textScale, textAlign } = props;
+  let {
+    cx,
+    cy,
+    radMin,
+    radMax,
+    ticks,
+    textScale,
+    textAlign,
+    dominantBaseline,
+    fontSize
+  } = props;
   if (textScale === undefined) {
     textScale = 0.6;
   }
@@ -55,13 +67,17 @@ export let Dial = (props: DialProps) => {
             rMax={radMax}
             className={tick.className}
           />
-          <Rotate cx={cx} cy={cy} angle={tick.angle + textRotExtra}>
+          <Rotate cx={cx} cy={cy} angle={tick.angle + 180 + textRotExtra}>
             <text
               x={cx}
               y={cy - (radMin + radMax) / 2}
               textAnchor={textAlign === "left" ? "left" : "middle"}
-              dominantBaseline="mathematical"
-              fontSize={(radMax - radMin) * (textScale as number)}
+              dominantBaseline={
+                dominantBaseline ? dominantBaseline : "mathematical"
+              }
+              fontSize={
+                fontSize ? fontSize : (radMax - radMin) * (textScale as number)
+              }
               className={tick.classNameText || "sFillInk"}
             >
               {tick.text}

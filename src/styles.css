@@ -142,6 +142,41 @@ a {
   fill: rgb(108, 96, 163);
 }
 
+/* small layouts need higher color contrast for highlights */
+@media (max-width: 380px), (max-height: 380px) {
+  .sNone.sHighlight {
+    fill: rgb(204, 119, 204);
+  }
+
+  .sFillInk.sHighlight {
+    fill: var(--cInkHighlight);
+  }
+
+  .sFillSpring.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(164, 216, 164);
+  }
+
+  .sFillSummer.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(230, 197, 122);
+  }
+
+  .sFillAutumn.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(241, 156, 103);
+  }
+
+  .sFillWinter.sHighlight {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(160, 142, 236);
+  }
+}
+
 @media (prefers-color-scheme: light) {
   .sDay {
     stroke: none;
@@ -238,5 +273,40 @@ a {
     stroke: var(--cPage);
     stroke-width: 2;
     fill: rgb(188, 177, 248);
+  }
+
+  /* small layouts need higher color contrast for highlights */
+  @media (max-width: 380px), (max-height: 380px) {
+    .sNone.sHighlight {
+      fill: rgb(201, 87, 142);
+    }
+
+    .sFillInk.sHighlight {
+      fill: var(--cInkHighlight);
+    }
+
+    .sFillSpring.sHighlight {
+      stroke: var(--cPage);
+      stroke-width: 2;
+      fill: rgb(59, 97, 59);
+    }
+
+    .sFillSummer.sHighlight {
+      stroke: var(--cPage);
+      stroke-width: 2;
+      fill: rgb(155, 123, 50);
+    }
+
+    .sFillAutumn.sHighlight {
+      stroke: var(--cPage);
+      stroke-width: 2;
+      fill: rgb(177, 93, 74);
+    }
+
+    .sFillWinter.sHighlight {
+      stroke: var(--cPage);
+      stroke-width: 2;
+      fill: rgb(100, 86, 184);
+    }
   }
 }

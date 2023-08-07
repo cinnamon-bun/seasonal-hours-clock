@@ -1,15 +1,12 @@
 import * as React from "react";
 import "./styles.css";
 
-import SunCalc from "suncalc";
-
 import { config } from "./config";
-import { dayPct, nop, range } from "./util";
-import { Pie, Rec, Rotate } from "./svg-utils";
-import { Dial } from "./dial";
-import { sFillDebug, sFillSeasonLookup, sLineDebug } from "./styles";
-import { useTimer } from "./hooks";
 import { hourTable } from "./seasonal-hours";
+
+import Resizer from "./resizer";
+import NowUpdater from "./now-updater";
+import { Clock } from "./clock";
 
 let url = new URL(window.location.href);
 
@@ -82,26 +79,8 @@ let obtainLocSomehow = async (): Promise<Location | null> => {
   }
 };
 
-let computeSunTimes = (loc: Location | null) => {
-  console.log("=== calculating sun times for location ", loc);
-  if (loc === null) {
-    return null;
-  }
-  return SunCalc.getTimes(new Date(), loc.lat, loc.lon);
-};
-
 //================================================================================
 // MAIN
-
-let hourToString = (n: number): string => {
-  const nToUse = (n + 12) % 24;
-
-  if (nToUse < 10) {
-    return `0${nToUse}`;
-  }
-
-  return `${nToUse}`;
-};
 
 function get_highlighted_hours(url: URL): Set<number> {
   const hours = new Set<number>();
@@ -125,245 +104,37 @@ function get_highlighted_hours(url: URL): Set<number> {
 
 const highlighted_hours = get_highlighted_hours(url);
 
+let now = new Date();
+let hoursOffset = (-1 * now.getTimezoneOffset()) / 60;
+const offset_string = url.searchParams.get("offset");
+if (offset_string != null) {
+  const offset = parseFloat(offset_string);
+  if (!Number.isNaN(offset)) {
+    hoursOffset = offset;
+  }
+}
+
 export default function App() {
-  let redrawTick = useTimer(config.redrawEveryNSeconds * 1000);
-  let recalcSunTick = useTimer(1000 * 60 * 60 * 6); // recalc sun every 6 hours
-
-  nop(redrawTick); // satisfy linter
-
   // get location from browser once at startup
   let [loc, setLoc] = React.useState<Location | null>(null);
   React.useEffect(() => {
     if (config.showSunTimes) {
-      console.log("> calling getLocation");
       obtainLocSomehow().then((loc) => setLoc(loc));
     }
   }, []);
-  console.log("        render: location = ", loc);
-
-  // recalculate sun times
-  let sunTimes = React.useMemo(() => {
-    nop(recalcSunTick); // satisfy linter
-    return computeSunTimes(loc);
-  }, [loc, recalcSunTick]);
-  console.log("        render: sunTimes = ", sunTimes);
-
-  let res = config.res;
-  let cx = res / 2;
-  let cy = res / 2;
-  let radMax = (res / 2) * 0.98;
-  let now = new Date();
-  let hoursOffset = -1 * (now.getTimezoneOffset() / 60);
-  const offset_string = url.searchParams.get("offset");
-  if (offset_string != null) {
-    const offset = parseFloat(offset_string);
-    if (!Number.isNaN(offset)) {
-      hoursOffset = offset;
-    }
-  }
-  let nowDayPct = dayPct(now); // range: 0-1 (midnight to midnight)
-
-  const daylightRadiusFactor = 0.67;
 
   return (
     <div className="App">
-      <svg width={config.res} height={config.res} style={sFillDebug}>
-        {/* debug borders */}
-        <Rec cx={cx} cy={cy} rx={res / 2 - 1} style={sLineDebug} />
-        <circle cx={cx} cy={cy} r={5} style={sLineDebug} />
-        <circle cx={cx} cy={cy} r={res / 2} style={sLineDebug} />
-
-        {/* daylight */}
-        {sunTimes !== null && config.showSunTimes ? (
-          <Pie
-            cx={cx}
-            cy={cy}
-            angle1={(dayPct(sunTimes.sunrise) + hoursOffset / 24) * 360 - 180}
-            angle2={(dayPct(sunTimes.sunset) + hoursOffset / 24) * 360 + 180}
-            rMin={radMax * 0}
-            rMax={radMax * daylightRadiusFactor}
-            className={"sDay"}
+      <Resizer>
+        <NowUpdater frequency={1000 * config.redrawEveryNSeconds}>
+          <Clock
+            utc_offset={hoursOffset / 24}
+            loc={loc}
+            highlighted_hours={highlighted_hours}
+            hourTable={hourTable}
           />
-        ) : undefined}
-
-        {/* sunset to civil dusk */}
-        {sunTimes !== null && config.showSunTimes ? (
-          <Pie
-            cx={cx}
-            cy={cy}
-            angle1={(dayPct(sunTimes.sunset) + hoursOffset / 24) * 360 + 180}
-            angle2={(dayPct(sunTimes.sunrise) + hoursOffset / 24) * 360 + 180}
-            rMin={radMax * 0}
-            rMax={radMax * daylightRadiusFactor}
-            className={"sCivilDusk"}
-          />
-        ) : undefined}
-
-        {/* civil dusk to nautical dusk */}
-        {sunTimes !== null && config.showSunTimes ? (
-          <Pie
-            cx={cx}
-            cy={cy}
-            angle1={(dayPct(sunTimes.dusk) + hoursOffset / 24) * 360 + 180}
-            angle2={(dayPct(sunTimes.dawn) + hoursOffset / 24) * 360 + 180}
-            rMin={radMax * 0}
-            rMax={radMax * daylightRadiusFactor}
-            className={"sNauticalDusk"}
-          />
-        ) : undefined}
-
-        {/* nautical dusk through night */}
-        {sunTimes !== null && config.showSunTimes ? (
-          <Pie
-            cx={cx}
-            cy={cy}
-            angle1={
-              (dayPct(sunTimes.nauticalDusk) + hoursOffset / 24) * 360 + 180
-            }
-            angle2={
-              (dayPct(sunTimes.nauticalDawn) + hoursOffset / 24) * 360 + 180
-            }
-            rMin={radMax * 0}
-            rMax={radMax * daylightRadiusFactor}
-            className={"sNight"}
-          />
-        ) : undefined}
-
-        {/* sun */}
-        <Rotate cx={cx} cy={cy} angle={(nowDayPct + hoursOffset / 24) * 360}>
-          <circle
-            cx={cx}
-            cy={cy + radMax * 0.5}
-            r={radMax * 0.035}
-            className={"sFillInk"}
-          />
-        </Rotate>
-
-        {/* season hours and UTC labels */}
-        <Rotate cx={cx} cy={cy} angle={((12 + hoursOffset) / 24) * 360}>
-          {/* season hours */}
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={radMax * 0.9}
-            radMin={radMax * 0.8}
-            textAlign="center-range"
-            textScale={0.39}
-            ticks={range(24).map((n) => {
-              let hourOf = hourTable[n];
-              // title case
-              let shortNameTitle =
-                hourOf.shortName[0].toUpperCase() + hourOf.shortName.slice(1);
-              return {
-                angle: (360 * n) / 24,
-                text: shortNameTitle,
-                className: `${sFillSeasonLookup[hourOf.season]} ${
-                  highlighted_hours.has(n) ? "sHighlight" : ""
-                }`,
-                classNameText: `sFillInk ${
-                  highlighted_hours.has(n) ? "sHighlight" : ""
-                }`
-              };
-            })}
-          />
-          {/* inner ring: background highlighting */}
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={radMax * 0.8}
-            radMin={radMax * 0.715}
-            textAlign="center-line"
-            ticks={range(24).map((n) => {
-              return {
-                angle: (360 * n) / 24,
-                text: "",
-                className: `sNone ${
-                  highlighted_hours.has(n) ? "sHighlight" : ""
-                }`,
-                classNameText: ""
-              };
-            })}
-          />
-          {/* inner ring: utc */}
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={radMax * 0.8}
-            radMin={radMax * 0.727}
-            textAlign="center-line"
-            ticks={range(24).map((n) => {
-              return {
-                angle: (360 * n) / 24,
-                text: "U " + ("" + n).padStart(2, "0"),
-                className: "sNone", // highlightng the background here makes it overlap the U00 text
-                classNameText: "sFillInkFaint"
-              };
-            })}
-          />
-          {/* inner ring: emoji */}
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={radMax * 0.82}
-            radMin={radMax * 0.715}
-            textAlign="center-range"
-            ticks={range(24).map((n) => {
-              let moji = `${hourTable[n].emoji}\uFE0F`;
-
-              return {
-                angle: (360 * n) / 24,
-                text: moji,
-                className: "sNone",
-                classNameText: "iconText"
-              };
-            })}
-          />
-          {/* outer ring: highlighting */}
-          <Dial
-            cx={cx}
-            cy={cy}
-            radMax={radMax * 1.01}
-            radMin={radMax * 0.9}
-            textAlign="center-line"
-            textScale={0.62}
-            ticks={range(24).map((n) => ({
-              angle: (360 * n) / 24,
-              text: "",
-              className: `sNone ${
-                highlighted_hours.has(n) ? "sHighlight" : ""
-              }`,
-              classNameText: ""
-            }))}
-          />
-        </Rotate>
-
-        {/* outer ring: local time */}
-        <Dial
-          cx={cx}
-          cy={cy}
-          radMax={radMax * 1.01}
-          radMin={radMax * 0.9}
-          textAlign="center-line"
-          textScale={0.62}
-          ticks={range(24).map((n) => ({
-            angle: (360 * n) / 24,
-            text: hourToString(n),
-            className: "sNone",
-            classNameText: "sFillInk"
-          }))}
-        />
-
-        {/* line of hour hand */}
-        <Rotate cx={cx} cy={cy} angle={(nowDayPct + hoursOffset / 24) * 360}>
-          <line
-            x1={cx}
-            y1={cy + radMax * 0.5}
-            x2={cx}
-            y2={cy + radMax * 0.82}
-            className={"sLineInk"}
-          />
-        </Rotate>
-      </svg>
+        </NowUpdater>
+      </Resizer>
     </div>
   );
 }
