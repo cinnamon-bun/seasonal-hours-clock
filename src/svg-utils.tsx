@@ -95,6 +95,9 @@ export let Pie = ({
   style,
   className
 }: PieProps) => {
+  angle1 += 180;
+  angle2 += 180;
+
   rMin = rMin === undefined ? 0 : rMin;
   let outerPoints: number[][] = [];
   let innerPoints: number[][] = [];

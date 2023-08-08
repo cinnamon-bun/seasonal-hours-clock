@@ -1,5 +1,5 @@
 :root {
-  --cPage: rgb(0, 0, 0);
+  --cPage: rgb(5, 6, 10);
   --cInk: #eb5;
   --cInkFaint: rgb(91, 68, 38);
   --cInkHighlight: rgb(255, 211, 123);
@@ -142,6 +142,35 @@ a {
   fill: rgb(108, 96, 163);
 }
 
+/* small layouts need higher color contrast for highlights */
+.sNone.sHighlightStrongly {
+  fill: rgb(99, 45, 99);
+}
+
+.sFillSpring.sHighlightStrongly {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(164, 216, 164);
+}
+
+.sFillSummer.sHighlightStrongly {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(230, 197, 122);
+}
+
+.sFillAutumn.sHighlightStrongly {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(241, 156, 103);
+}
+
+.sFillWinter.sHighlightStrongly {
+  stroke: var(--cPage);
+  stroke-width: 2;
+  fill: rgb(160, 142, 236);
+}
+
 @media (prefers-color-scheme: light) {
   .sDay {
     stroke: none;
@@ -238,5 +267,34 @@ a {
     stroke: var(--cPage);
     stroke-width: 2;
     fill: rgb(188, 177, 248);
+  }
+
+  /* small layouts need higher color contrast for highlights */
+  .sNone.sHighlightStrongly {
+    fill: rgb(248, 189, 217);
+  }
+
+  .sFillSpring.sHighlightStrongly {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(59, 97, 59);
+  }
+
+  .sFillSummer.sHighlightStrongly {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(155, 123, 50);
+  }
+
+  .sFillAutumn.sHighlightStrongly {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(177, 93, 74);
+  }
+
+  .sFillWinter.sHighlightStrongly {
+    stroke: var(--cPage);
+    stroke-width: 2;
+    fill: rgb(100, 86, 184);
   }
 }
