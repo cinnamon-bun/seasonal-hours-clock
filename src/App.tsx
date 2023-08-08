@@ -7,6 +7,7 @@ import { hourTable } from "./seasonal-hours";
 import Resizer from "./resizer";
 import NowUpdater from "./now-updater";
 import { Clock } from "./clock";
+import RepoLink from "./repo-link";
 
 let url = new URL(window.location.href);
 
@@ -134,6 +135,7 @@ export default function App() {
             hourTable={hourTable}
           />
         </NowUpdater>
+        <RepoLink />
       </Resizer>
     </div>
   );
