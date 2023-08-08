@@ -322,7 +322,7 @@ export default function CircularClock({
             11.2
           )}
           ticks={range(24).map((n) => ({
-            angle: (360 * n) / 24 + 180,
+            angle: (360 * n) / 24 + 540,
             text:
               n % show_local_times_divisible_by === 0 ? hourToString(n) : ".",
             className: "sNone",
