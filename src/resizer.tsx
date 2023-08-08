@@ -5,35 +5,23 @@ import React from "react";
 
 import { ViewportSizeContext } from "./viewport-size-context";
 
-function debounce(fn, ms) {
-  let timer;
-
-  return (_) => {
-    clearTimeout(timer);
-    timer = setTimeout((_) => {
-      timer = null;
-      fn.apply(this, arguments);
-    }, ms);
-  };
-}
-
-export default function Resizer({ children }) {
+export default function Resizer({ children }: { children: React.ReactNode }) {
   const [dimensions, setDimensions] = React.useState({
     height: window.innerHeight,
     width: window.innerWidth
   });
 
   React.useEffect(() => {
-    const handleResizeDebounced = debounce(function handleResize() {
+    const handleResize = () => {
       setDimensions({
         height: window.innerHeight,
         width: window.innerWidth
       });
-    }, 20);
+    };
 
-    window.addEventListener("resize", handleResizeDebounced);
+    window.addEventListener("resize", handleResize);
 
-    return () => window.removeEventListener("resize", handleResizeDebounced);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   return (

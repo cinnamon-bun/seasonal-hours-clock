@@ -4,7 +4,13 @@ import React from "react";
 
 import { UpdateNowContext } from "./update-now-context";
 
-export default function UpdateNow({ frequency /*milliseconds*/, children }) {
+export default function UpdateNow({
+  frequency /*milliseconds*/,
+  children
+}: {
+  frequency: number;
+  children: React.ReactNode;
+}) {
   const [now, setNow] = React.useState(new Date());
 
   React.useEffect(() => {
