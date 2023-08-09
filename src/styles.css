@@ -39,7 +39,9 @@ a {
 .App {
   font-family: sans-serif;
   text-align: center;
+  transform: translate3d(0, 0, 0);
 }
+
 
 .sDay {
   stroke: none;
