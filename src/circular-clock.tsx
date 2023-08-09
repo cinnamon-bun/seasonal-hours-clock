@@ -128,7 +128,7 @@ export default function CircularClock({
   };
 
   const determine_highlighting = (hour: number) => {
-    console.log(`r: ${radius}; threshold: ${show_utc_radius}`);
+    // console.log(`r: ${radius}; threshold: ${show_utc_radius}`);
 
     if (highlighted_hours.has(hour)) {
       if (radius >= show_utc_radius) {
