@@ -13,10 +13,12 @@ export default function Resizer({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     const handleResize = () => {
-      setDimensions({
-        height: window.innerHeight,
-        width: window.innerWidth
-      });
+       requestAnimationFrame(() => {
+        setDimensions({
+          height: window.innerHeight,
+          width: window.innerWidth
+        });
+       });
     };
 
     window.addEventListener("resize", handleResize);
